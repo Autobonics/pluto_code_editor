@@ -77,6 +77,7 @@ class _EditorLineState extends State<EditorLine> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: 20,
@@ -85,46 +86,51 @@ class _EditorLineState extends State<EditorLine> {
           child: Center(child: Text(widget.lineNumber.toString())),
         ),
         Expanded(
-            child: MyEditableText(
-          controller: widget.controller.textEditingController,
-          focusNode: widget.controller.focusNode,
+          //     child: MyEditableText(
+          //   controller: widget.controller.textEditingController,
+          //   focusNode: widget.controller.focusNode,
+          // )
+          child: TextField(
+            decoration: null,
+            autocorrect: false,
+            keyboardType: TextInputType.multiline,
+            textInputAction: TextInputAction.newline,
+            autofocus: true,
+            inputFormatters: [Formatter(widget.onNextPressed)],
+            // maxLines: null,
+            focusNode: widget.controller.focusNode,
+            controller: widget.controller.textEditingController,
+            onEditingComplete: () {
+              print("on Editing complete");
+            },
+            onSubmitted: (val) => print('on submit pressed'),
+            // onChanged: (val) {
+            //   // _pressedKey = KeyboardUtilz.getPressedKey(_value, value);
+            //   print("on chnaged pressed");
+            // },
+            // onTap: () => print('on tap pressed'),
+          ),
         )
-            // child: TextField(
-            //   decoration: null,
-            //   autocorrect: false,
-            //   // keyboardType: TextInputType.multiline,
-            //   autofocus: true,
-            //   inputFormatters: [Formatter()],
-            //   // maxLines: 100,
-            //   focusNode: widget.controller.focusNode,
-            //   controller: widget.controller.textEditingController,
-            //   onEditingComplete: () => widget.onNextPressed(),
-            //   onSubmitted: (val) => print('on submit pressed'),
-
-            //   textInputAction: TextInputAction.newline,
-            //   onChanged: (val) {
-            //     // _pressedKey = KeyboardUtilz.getPressedKey(_value, value);
-            //     print("on chnaged pressed");
-            //     print(val);
-            //     if (val.contains('\n')) {
-            //       print(' yea baby got it');
-            //     }
-            //   },
-            //   onTap: () => print('on tap pressed'),
-            // ),
-            )
       ],
     );
   }
 }
 
 class Formatter extends TextInputFormatter {
+  void Function() onNewLine;
+
+  Formatter(this.onNewLine);
+
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     // TODO: implement formatEditUpdate
-    print('old value ${oldValue.text} and new value is ${newValue.text}');
-    print(KeyboardUtilz.getPressedKey(oldValue, newValue));
+    // print('old value ${oldValue.text} and new value is ${newValue.text}');
+    PressedKey pressedKey = KeyboardUtilz.getPressedKey(oldValue, newValue);
+    if (pressedKey == PressedKey.enter) {
+      onNewLine();
+    }
+
     return newValue;
   }
 }
@@ -185,12 +191,14 @@ class MyEditableText extends EditableText {
           style: style ?? TextStyle(),
           cursorColor: cursorColor ?? Colors.black,
           backgroundCursorColor: backgroudCursorColor ?? Colors.red,
-          keyboardType: TextInputType.multiline,
-          // maxLines: null,
+          // keyboardType: TextInputType.multiline,
+          maxLines: 1,
           textInputAction: TextInputAction.newline,
           onEditingComplete: () {
             print("editing completed ============");
           },
+          onSubmitted: (val) => print("submitted"),
+          onChanged: (val) => print('changed'),
         );
 
   @override
@@ -204,7 +212,8 @@ class MyEditableTextState extends EditableTextState {
   // void updateEditingValue(TextEditingValue value) {
   //   oldValue = value;
   //   print(value.text);
-  //   print(KeyboardUtilz.getPressedKey(oldValue, value));
+  //   setState(() {});
+  //   // print(KeyboardUtilz.getPressedKey(oldValue, value));
   // }
 
   @override
