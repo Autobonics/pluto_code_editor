@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pluto_code_editor/pluto_code_editor.dart';
 import 'package:pluto_code_editor/src/bonicpython_syntax_highlight.dart';
 
@@ -31,20 +32,22 @@ class _PlutoCodeEditorHomeState extends State<PlutoCodeEditorHome> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        color: Colors.red,
+        color: Colors.white,
         child: ListView.builder(
           itemCount: _controllers.length,
           itemBuilder: (context, index) {
             return EditorLine(
               controller: _controllers[index],
               lineNumber: index + 1,
-              onNextPressed: () {
+              onNextPressed: () async {
                 print("on next pressed");
-                _controllers.insert(
-                    index + 1, EditorLineController(_syntaxHighlighter));
+                EditorLineController controller =
+                    EditorLineController(_syntaxHighlighter);
+                _controllers.insert(index + 1, controller);
                 setState(() {});
-                FocusScope.of(context)
-                    .requestFocus(_controllers[index + 1].focusNode);
+                await Future.delayed(Duration(milliseconds: 100));
+                FocusScope.of(context).unfocus();
+                FocusScope.of(context).requestFocus(controller.focusNode);
               },
             );
           },
@@ -82,25 +85,47 @@ class _EditorLineState extends State<EditorLine> {
           child: Center(child: Text(widget.lineNumber.toString())),
         ),
         Expanded(
-          child: RawKeyboardListener(
-            focusNode: widget.controller.focusNode,
-            onKey: (RawKeyEvent event) {},
-            child: TextField(
-              decoration: null,
-              autocorrect: false,
-              keyboardType: TextInputType.multiline,
-              autofocus: true,
-              // focusNode: widget.controller.focusNode,
-              controller: widget.controller.textEditingController,
-              onEditingComplete: () => widget.onNextPressed(),
-              onSubmitted: (val) => print('on submit pressed'),
-              onChanged: (val) => print(val),
-              onTap: () => print('on tap pressed'),
-            ),
-          ),
+            child: MyEditableText(
+          controller: widget.controller.textEditingController,
+          focusNode: widget.controller.focusNode,
         )
+            // child: TextField(
+            //   decoration: null,
+            //   autocorrect: false,
+            //   // keyboardType: TextInputType.multiline,
+            //   autofocus: true,
+            //   inputFormatters: [Formatter()],
+            //   // maxLines: 100,
+            //   focusNode: widget.controller.focusNode,
+            //   controller: widget.controller.textEditingController,
+            //   onEditingComplete: () => widget.onNextPressed(),
+            //   onSubmitted: (val) => print('on submit pressed'),
+
+            //   textInputAction: TextInputAction.newline,
+            //   onChanged: (val) {
+            //     // _pressedKey = KeyboardUtilz.getPressedKey(_value, value);
+            //     print("on chnaged pressed");
+            //     print(val);
+            //     if (val.contains('\n')) {
+            //       print(' yea baby got it');
+            //     }
+            //   },
+            //   onTap: () => print('on tap pressed'),
+            // ),
+            )
       ],
     );
+  }
+}
+
+class Formatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    // TODO: implement formatEditUpdate
+    print('old value ${oldValue.text} and new value is ${newValue.text}');
+    print(KeyboardUtilz.getPressedKey(oldValue, newValue));
+    return newValue;
   }
 }
 
@@ -117,4 +142,80 @@ class EditorLineController {
   TextEditingController get textEditingController => _controller;
 
   FocusNode get focusNode => _focusNode;
+}
+
+class KeyboardUtilz {
+  /// Check and see if last pressed key was enter key.
+  /// This is checked by looking if the last character text == "\n".
+  static PressedKey getPressedKey(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.length == 1 && newValue.text == "\n") {
+      return PressedKey.enter;
+    }
+
+    final TextSelection newSelection = newValue.selection;
+    final TextSelection currentSelection = oldValue.selection;
+
+    if (currentSelection.baseOffset > newSelection.baseOffset) {
+      //backspace was pressed
+      return PressedKey.backSpace;
+    }
+
+    var lastChar = newValue.text
+        .substring(currentSelection.baseOffset, newSelection.baseOffset);
+
+    return lastChar == "\n" ? PressedKey.enter : PressedKey.regular;
+  }
+}
+
+enum PressedKey { enter, backSpace, regular }
+
+class MyEditableText extends EditableText {
+  MyEditableText({
+    Key? key,
+    required FocusNode focusNode,
+    required TextEditingController controller,
+    TextStyle? style,
+    Color? cursorColor,
+    Color? backgroudCursorColor,
+  }) : super(
+          key: key,
+          focusNode: focusNode,
+          controller: controller,
+          style: style ?? TextStyle(),
+          cursorColor: cursorColor ?? Colors.black,
+          backgroundCursorColor: backgroudCursorColor ?? Colors.red,
+          keyboardType: TextInputType.multiline,
+          // maxLines: null,
+          textInputAction: TextInputAction.newline,
+          onEditingComplete: () {
+            print("editing completed ============");
+          },
+        );
+
+  @override
+  EditableTextState createState() => MyEditableTextState();
+}
+
+class MyEditableTextState extends EditableTextState {
+  // TextEditingValue oldValue = TextEditingValue.empty;
+
+  // @override
+  // void updateEditingValue(TextEditingValue value) {
+  //   oldValue = value;
+  //   print(value.text);
+  //   print(KeyboardUtilz.getPressedKey(oldValue, value));
+  // }
+
+  @override
+  void performAction(TextInputAction action) {
+    print(action);
+    switch (action) {
+      case TextInputAction.newline:
+        print("newline created-------");
+        break;
+      default:
+        print("default action");
+    }
+  }
 }
