@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_code_editor/src/syntax_highlighter_base.dart';
+import 'package:pluto_code_editor/src/bonicpython.dart';
+import 'package:pluto_code_editor/src/editor_theme.dart';
+import 'package:highlight/highlight_core.dart' show highlight, Node;
 
 class PlutoRichCodeEditingController extends TextEditingController {
-  SyntaxHighlighterBase syntaxHighlighter;
+  // SyntaxHighlighterBase syntaxHighlighter;
+  final EditorTheme theme;
 
-  PlutoRichCodeEditingController(
-      {required this.syntaxHighlighter, String? text})
+  PlutoRichCodeEditingController({String? text, required this.theme})
       : super(text: text);
 
   @override
@@ -17,12 +19,61 @@ class PlutoRichCodeEditingController extends TextEditingController {
     );
   }
 
+  List<TextSpan> _convert(List<Node> nodes) {
+    List<TextSpan> spans = [];
+    var currentSpans = spans;
+    List<List<TextSpan>> stack = [];
+
+    _traverse(Node node) {
+      if (node.value != null) {
+        currentSpans.add(node.className == null
+            ? TextSpan(text: node.value)
+            : TextSpan(
+                text: node.value, style: theme.syntaxTheme[node.className!]));
+      } else if (node.children != null) {
+        List<TextSpan> tmp = [];
+        currentSpans.add(
+            TextSpan(children: tmp, style: theme.syntaxTheme[node.className!]));
+        stack.add(currentSpans);
+        currentSpans = tmp;
+
+        node.children!.forEach((n) {
+          _traverse(n);
+          if (n == node.children!.last) {
+            currentSpans = stack.isEmpty ? spans : stack.removeLast();
+          }
+        });
+      }
+    }
+
+    for (var node in nodes) {
+      _traverse(node);
+    }
+
+    return spans;
+  }
+
+  static const _rootKey = 'root';
+
   @override
   TextSpan buildTextSpan(
       {required BuildContext context, TextStyle? style, bool? withComposing}) {
-    List<TextSpan> lsSpans = syntaxHighlighter.parseText(value);
+    var _textStyle = TextStyle(
+      fontFamily: theme.fontFamily,
+      color: theme.syntaxTheme[_rootKey]?.color ?? theme.fontColor,
+    );
 
-    return TextSpan(style: style, children: lsSpans);
+    // List<TextSpan> lsSpans = syntaxHighlighter.parseText(value);
+
+    // return TextSpan(style: style, children: lsSpans);
+
+    highlight.registerLanguage('bonicpython', bonicpython);
+
+    return TextSpan(
+      style: _textStyle,
+      children:
+          _convert(highlight.parse(value.text, language: 'bonicpython').nodes!),
+    );
 
     // final List<InlineSpan> children = [];
     // String patternMatched;

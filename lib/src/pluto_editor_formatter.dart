@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:pluto_code_editor/pluto_code_editor.dart';
 
 class PlutoEditorFormatter extends TextInputFormatter {
   final void Function() onNewLine;
@@ -64,3 +63,9 @@ class KeyboardUtilz {
 }
 
 enum PressedKey { enter, backSpace, regular }
+
+class LineIndentationController {
+  int currentIndent;
+
+  LineIndentationController() : currentIndent = 0;
+}

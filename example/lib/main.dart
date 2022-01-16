@@ -31,8 +31,8 @@ class PlutoCodeEditorDemo extends StatefulWidget {
 class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: PlutoCodeEditor(),
+    return Scaffold(
+      body: SafeArea(child: PlutoCodeEditor()),
     );
   }
 }
