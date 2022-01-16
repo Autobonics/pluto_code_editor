@@ -7,10 +7,12 @@ import 'package:pluto_code_editor/src/pluto_editor_line_controller.dart';
 
 class PlutoCodeEditor extends StatefulWidget {
   final SyntaxHighlighterBase? syntaxHighlighter;
+  final Color dividerLineColor;
 
   const PlutoCodeEditor({
     Key? key,
     this.syntaxHighlighter,
+    this.dividerLineColor = Colors.grey,
   }) : super(key: key);
 
   @override
@@ -45,6 +47,7 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
               controller: _controllers[index],
               lineNumber: index + 1,
               indentationController: _indentationController,
+              dividerLineColor: widget.dividerLineColor,
               onNewline: () async {
                 PlutoEditorLineController controller =
                     PlutoEditorLineController(_syntaxHighlighter,
@@ -75,6 +78,7 @@ class EditorLine extends StatefulWidget {
   final void Function(int) onRemoveLine;
   final int lineNumber;
   final LineIndentationController indentationController;
+  final Color dividerLineColor;
 
   const EditorLine({
     Key? key,
@@ -83,6 +87,7 @@ class EditorLine extends StatefulWidget {
     required this.onNewline,
     required this.onRemoveLine,
     required this.indentationController,
+    required this.dividerLineColor,
   }) : super(key: key);
 
   @override
@@ -109,6 +114,15 @@ class _EditorLineState extends State<EditorLine> {
           height: 20,
           // color: Colors.grey,
           child: Center(child: Text(widget.lineNumber.toString())),
+        ),
+        Container(
+          height: 20,
+          width: 1,
+          color: widget.dividerLineColor,
+        ),
+        const SizedBox(
+          width: 7,
+          height: 20,
         ),
         Expanded(
           child: RawKeyboardListener(

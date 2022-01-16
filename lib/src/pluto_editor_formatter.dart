@@ -14,8 +14,7 @@ class PlutoEditorFormatter extends TextInputFormatter {
       TextEditingValue oldValue, TextEditingValue newValue) {
     PressedKey pressedKey = KeyboardUtilz.getPressedKey(oldValue, newValue);
     if (pressedKey == PressedKey.enter) {
-      newValue = newValue.copyWith(text: newValue.text.replaceAll('\n', ' '));
-      _currentPos += 1;
+      newValue = oldValue;
       String lastChar = '';
       String trimmedVal = newValue.text.trim();
       if (trimmedVal.length > 1) {
@@ -24,7 +23,6 @@ class PlutoEditorFormatter extends TextInputFormatter {
       }
       if (lastChar == ":") {
         _indentationController.currentIndent += 1;
-        print('updated indent');
       }
       onNewLine();
     } else if (pressedKey == PressedKey.regular) {
@@ -36,8 +34,6 @@ class PlutoEditorFormatter extends TextInputFormatter {
         _indentationController.currentIndent += (_currentPos ~/ 2);
       }
     }
-    print('current pos => $_currentPos');
-    print('currnet intect ->.... ${_indentationController.currentIndent}');
 
     return newValue;
   }
