@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_highlight/themes/github.dart';
-import 'package:flutter_highlight/themes/vs.dart';
-import 'package:pluto_code_editor/pluto_code_editor.dart';
 import 'package:pluto_code_editor/src/editor_theme.dart';
+import 'package:pluto_code_editor/src/pluto_rich_code_editing_controller.dart';
 
 class PlutoEditorLineController {
   final PlutoRichCodeEditingController _controller;
   final FocusNode _focusNode;
-  int currentIndent;
+  final EditorTheme editorTheme;
+  final String language;
 
-  PlutoEditorLineController({String? text})
-      : _controller = PlutoRichCodeEditingController(
+  PlutoEditorLineController({
+    String? text,
+    required this.editorTheme,
+    required this.language,
+  })  : _controller = PlutoRichCodeEditingController(
           text: text,
-          theme: EditorTheme(),
+          theme: editorTheme,
+          language: language,
         ),
-        _focusNode = FocusNode(),
-        currentIndent = 0;
+        _focusNode = FocusNode();
 
   TextEditingController get textEditingController => _controller;
 

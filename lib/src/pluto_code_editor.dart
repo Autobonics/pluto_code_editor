@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:pluto_code_editor/src/bonicpython.dart';
 import 'package:pluto_code_editor/src/editor_theme.dart';
+import 'package:pluto_code_editor/src/pluto_code_editor_controller.dart';
 import 'package:pluto_code_editor/src/pluto_editor_formatter.dart';
 import 'package:pluto_code_editor/src/pluto_editor_line.dart';
 import 'package:pluto_code_editor/src/pluto_editor_line_controller.dart';
+import 'package:highlight/highlight_core.dart' show highlight;
 
 class PlutoCodeEditor extends StatefulWidget {
   // final SyntaxHighlighterBase? syntaxHighlighter;
   // final Color dividerLineColor;
+  final PlutoCodeEditorController controller;
   final EditorTheme theme;
+  final String language;
 
   PlutoCodeEditor({
     Key? key,
     // this.syntaxHighlighter,
+    required this.controller,
     EditorTheme? theme,
+    this.language = 'bonicpython',
   })  : this.theme = theme ?? EditorTheme(),
         super(key: key);
 
@@ -26,14 +32,17 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
   final LineIndentationController _indentationController =
       LineIndentationController();
 
-  final List<PlutoEditorLineController> _controllers =
-      <PlutoEditorLineController>[];
-
   @override
   void initState() {
-    // _syntaxHighlighter =
-    //     widget.syntaxHighlighter ?? BonicPythonSyntaxHighlighter();
-    _controllers.add(PlutoEditorLineController());
+    if (widget.language == 'bonicpython') {
+      highlight.registerLanguage('bonicpython', bonicpython);
+    }
+    widget.controller.controllers.add(
+      PlutoEditorLineController(
+        editorTheme: widget.theme,
+        language: widget.language,
+      ),
+    );
     super.initState();
   }
 
@@ -43,10 +52,10 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
       child: Container(
         color: widget.theme.backgroundColor,
         child: ListView.builder(
-          itemCount: _controllers.length,
+          itemCount: widget.controller.controllers.length,
           itemBuilder: (context, index) {
             return PlutoEditorLine(
-              controller: _controllers[index],
+              controller: widget.controller.controllers[index],
               lineNumber: index + 1,
               indentationController: _indentationController,
               dividerLineColor: widget.theme.dividerLineColor,
@@ -54,17 +63,21 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
               onNewline: () async {
                 PlutoEditorLineController controller =
                     PlutoEditorLineController(
-                        text: "  " * _indentationController.currentIndent);
-                _controllers.insert(index + 1, controller);
+                  text: "  " * _indentationController.currentIndent,
+                  editorTheme: widget.theme,
+                  language: widget.language,
+                );
+                widget.controller.controllers.insert(index + 1, controller);
                 setState(() {});
                 await Future.delayed(const Duration(milliseconds: 50));
                 FocusScope.of(context).requestFocus(controller.focusNode);
               },
               onRemoveLine: (int index) {
                 if (index == 0) return;
-                _controllers.removeAt(index);
+                widget.controller.controllers.removeAt(index);
                 setState(() {});
-                PlutoEditorLineController controller = _controllers[index - 1];
+                PlutoEditorLineController controller =
+                    widget.controller.controllers[index - 1];
                 FocusScope.of(context).requestFocus(controller.focusNode);
               },
             );

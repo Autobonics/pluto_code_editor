@@ -31,6 +31,9 @@ class PlutoEditorFormatter extends TextInputFormatter {
 
       if (_currentPos < 0) {
         _indentationController.currentIndent += (_currentPos ~/ 2);
+        if (_indentationController.currentIndent < 0) {
+          _indentationController.currentIndent = 0;
+        }
       }
     }
 

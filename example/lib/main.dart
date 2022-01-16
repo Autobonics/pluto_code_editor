@@ -29,10 +29,54 @@ class PlutoCodeEditorDemo extends StatefulWidget {
 }
 
 class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
+  PlutoCodeEditorController controller = PlutoCodeEditorController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: PlutoCodeEditor()),
+      body: SafeArea(
+        child: PlutoCodeEditor(
+          controller: controller,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        height: 75,
+        // color: Colors.red,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                height: 40,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: 70,
+                      color: Colors.transparent,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 4),
+                        child: Container(
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: FloatingActionButton(
+                onPressed: () {},
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
