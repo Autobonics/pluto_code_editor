@@ -7,7 +7,8 @@ class BonicPythonSyntaxHighlighter implements SyntaxHighlighterBase {
     var texts = tev.text.split(' ');
 
     var lsSpans = <TextSpan>[];
-    for (var originalText in texts) {
+    for (int i = 0; i < texts.length; i++) {
+      var originalText = texts[i];
       var text = originalText.replaceAll('\n', '');
       text = originalText.replaceAll(':', '');
       if (text == 'class') {

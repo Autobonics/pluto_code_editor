@@ -1,23 +1,43 @@
 import 'package:flutter/services.dart';
+import 'package:pluto_code_editor/pluto_code_editor.dart';
 
 class PlutoEditorFormatter extends TextInputFormatter {
-  final void Function(bool) onNewLine;
+  final void Function() onNewLine;
+  final LineIndentationController _indentationController;
+  int _currentPos;
 
-  PlutoEditorFormatter(this.onNewLine);
+  PlutoEditorFormatter(this.onNewLine, this._indentationController)
+      : _currentPos = 0;
 
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     PressedKey pressedKey = KeyboardUtilz.getPressedKey(oldValue, newValue);
     if (pressedKey == PressedKey.enter) {
-      newValue = newValue.copyWith(text: newValue.text.replaceAll('\n', ''));
+      newValue = newValue.copyWith(text: newValue.text.replaceAll('\n', ' '));
+      _currentPos += 1;
       String lastChar = '';
-      if (newValue.text.length > 1) {
-        lastChar = newValue.text
-            .substring(newValue.text.length - 1, newValue.text.length);
+      String trimmedVal = newValue.text.trim();
+      if (trimmedVal.length > 1) {
+        lastChar =
+            trimmedVal.substring(trimmedVal.length - 1, trimmedVal.length);
       }
-      onNewLine(lastChar == ":");
+      if (lastChar == ":") {
+        _indentationController.currentIndent += 1;
+        print('updated indent');
+      }
+      onNewLine();
+    } else if (pressedKey == PressedKey.regular) {
+      _currentPos += 1;
+    } else if (pressedKey == PressedKey.backSpace) {
+      _currentPos -= 1;
+
+      if (_currentPos < 0) {
+        _indentationController.currentIndent += (_currentPos ~/ 2);
+      }
     }
+    print('current pos => $_currentPos');
+    print('currnet intect ->.... ${_indentationController.currentIndent}');
 
     return newValue;
   }

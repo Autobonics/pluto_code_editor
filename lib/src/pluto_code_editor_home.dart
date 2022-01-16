@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pluto_code_editor/pluto_code_editor.dart';
-import 'package:pluto_code_editor/src/bonicpython_syntax_highlight.dart';
+import 'package:pluto_code_editor/src/bonicpython_syntax_highlighter.dart';
 import 'package:pluto_code_editor/src/pluto_editor_formatter.dart';
 import 'package:pluto_code_editor/src/pluto_editor_line_controller.dart';
 
@@ -19,6 +19,8 @@ class PlutoCodeEditor extends StatefulWidget {
 
 class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
   late SyntaxHighlighterBase _syntaxHighlighter;
+  final LineIndentationController _indentationController =
+      LineIndentationController();
 
   final List<PlutoEditorLineController> _controllers =
       <PlutoEditorLineController>[];
@@ -42,10 +44,11 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
             return EditorLine(
               controller: _controllers[index],
               lineNumber: index + 1,
-              onNewline: (bool needTab) async {
+              indentationController: _indentationController,
+              onNewline: () async {
                 PlutoEditorLineController controller =
                     PlutoEditorLineController(_syntaxHighlighter,
-                        text: needTab ? "  " : null);
+                        text: "  " * _indentationController.currentIndent);
                 _controllers.insert(index + 1, controller);
                 setState(() {});
                 await Future.delayed(const Duration(milliseconds: 50));
@@ -68,9 +71,10 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
 
 class EditorLine extends StatefulWidget {
   final PlutoEditorLineController controller;
-  final void Function(bool) onNewline;
+  final void Function() onNewline;
   final void Function(int) onRemoveLine;
   final int lineNumber;
+  final LineIndentationController indentationController;
 
   const EditorLine({
     Key? key,
@@ -78,6 +82,7 @@ class EditorLine extends StatefulWidget {
     required this.lineNumber,
     required this.onNewline,
     required this.onRemoveLine,
+    required this.indentationController,
   }) : super(key: key);
 
   @override
@@ -85,12 +90,21 @@ class EditorLine extends StatefulWidget {
 }
 
 class _EditorLineState extends State<EditorLine> {
+  late PlutoEditorFormatter _formatter;
+
+  @override
+  void initState() {
+    _formatter =
+        PlutoEditorFormatter(widget.onNewline, widget.indentationController);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
           width: 20,
           height: 20,
           // color: Colors.grey,
@@ -110,7 +124,7 @@ class _EditorLineState extends State<EditorLine> {
               keyboardType: TextInputType.multiline,
               textInputAction: TextInputAction.newline,
               autofocus: true,
-              inputFormatters: [PlutoEditorFormatter(widget.onNewline)],
+              inputFormatters: [_formatter],
               maxLines: null,
               focusNode: widget.controller.focusNode,
               controller: widget.controller.textEditingController,
@@ -120,4 +134,10 @@ class _EditorLineState extends State<EditorLine> {
       ],
     );
   }
+}
+
+class LineIndentationController {
+  int currentIndent;
+
+  LineIndentationController() : currentIndent = 0;
 }
