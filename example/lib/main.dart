@@ -32,7 +32,7 @@ class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: PlutoCodeEditorHome(),
+      body: PlutoCodeEditor(),
     );
   }
 }

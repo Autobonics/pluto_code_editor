@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_code_editor/src/syntax_highlighter_base.dart';
 
-class RichCodeEditingController extends TextEditingController {
+class PlutoRichCodeEditingController extends TextEditingController {
   SyntaxHighlighterBase syntaxHighlighter;
 
-  RichCodeEditingController({required this.syntaxHighlighter, String? text})
+  PlutoRichCodeEditingController(
+      {required this.syntaxHighlighter, String? text})
       : super(text: text);
 
   @override
