@@ -32,18 +32,31 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
   final LineIndentationController _indentationController =
       LineIndentationController();
 
+  _listner() {
+    setState(() {});
+  }
+
   @override
   void initState() {
     if (widget.language == 'bonicpython') {
       highlight.registerLanguage('bonicpython', bonicpython);
     }
+    widget.controller.addListener(_listner);
+
     widget.controller.controllers.add(
       PlutoEditorLineController(
         editorTheme: widget.theme,
         language: widget.language,
+        listner: () => widget.controller.currentFocus = 0,
       ),
     );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_listner);
+    super.dispose();
   }
 
   @override
@@ -61,18 +74,19 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
               dividerLineColor: widget.theme.dividerLineColor,
               lineNumberStyle: widget.theme.lineNumberStyle,
               onNewline: () async {
-                PlutoEditorLineController controller =
+                PlutoEditorLineController lineController =
                     PlutoEditorLineController(
                   text: "  " * _indentationController.currentIndent,
                   editorTheme: widget.theme,
                   language: widget.language,
+                  listner: () => widget.controller.currentFocus = index + 1,
                 );
-                widget.controller.controllers.insert(index + 1, controller);
+                widget.controller.controllers.insert(index + 1, lineController);
                 setState(() {});
                 await Future.delayed(const Duration(milliseconds: 50));
-                FocusScope.of(context).requestFocus(controller.focusNode);
+                FocusScope.of(context).requestFocus(lineController.focusNode);
               },
-              onRemoveLine: (int index) {
+              onRemoveLine: (int index) async {
                 if (index == 0) return;
                 widget.controller.controllers.removeAt(index);
                 setState(() {});

@@ -38,6 +38,12 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
   }
 
   @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -52,14 +52,19 @@ class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return Container(
-                      width: 70,
-                      color: Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 4),
-                        child: Container(
-                          color: Colors.blueAccent,
+                    return InkWell(
+                      onTap: () {
+                        controller.addCharacter('  ');
+                      },
+                      child: Container(
+                        width: 70,
+                        color: Colors.transparent,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 4),
+                          child: Container(
+                            color: Colors.blueAccent,
+                          ),
                         ),
                       ),
                     );

@@ -7,19 +7,27 @@ class PlutoEditorLineController {
   final FocusNode _focusNode;
   final EditorTheme editorTheme;
   final String language;
+  final VoidCallback listner;
 
   PlutoEditorLineController({
     String? text,
     required this.editorTheme,
     required this.language,
+    required this.listner,
   })  : _controller = PlutoRichCodeEditingController(
           text: text,
           theme: editorTheme,
           language: language,
         ),
-        _focusNode = FocusNode();
+        _focusNode = FocusNode()..addListener(listner);
 
   TextEditingController get textEditingController => _controller;
 
   FocusNode get focusNode => _focusNode;
+
+  void dispose() {
+    _focusNode.removeListener(listner);
+    _focusNode.dispose();
+    _controller.dispose();
+  }
 }
