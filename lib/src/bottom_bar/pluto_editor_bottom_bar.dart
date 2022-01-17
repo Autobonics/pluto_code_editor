@@ -82,7 +82,7 @@ class _PlutoEditorBottomBarState extends State<PlutoEditorBottomBar> {
             right: 8,
             top: 0,
             child: FloatingActionButton(
-              backgroundColor: widget.controller.theme.plutoColor,
+              backgroundColor: widget.controller.theme.mainColor,
               child: Icon(
                   widget.controller.isPlaying ? Icons.pause : Icons.play_arrow),
               onPressed: () {

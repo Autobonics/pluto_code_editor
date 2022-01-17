@@ -10,7 +10,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,6 +37,11 @@ class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff0088CC),
+        elevation: 0,
+        title: const Text("Pluto Code Editor"),
+      ),
       endDrawer: PlutoOutputViewer(
         controller: controller,
         output: streamController.stream,

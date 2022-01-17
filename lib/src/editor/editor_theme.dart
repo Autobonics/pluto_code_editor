@@ -8,7 +8,7 @@ class EditorTheme {
   final String fontFamily;
   late Map<String, TextStyle> syntaxTheme;
   late TextStyle lineNumberStyle;
-  late Color plutoColor;
+  late Color mainColor;
 
   static const _defaultFontColor = Color(0xff000000);
   static const defaultBackgroundColor = Color(0xffffffff);
@@ -22,7 +22,7 @@ class EditorTheme {
     Color? dividerLineColor,
     Color? backgroundColor,
     TextStyle? lineNumberStyle,
-    this.plutoColor = const Color(0xff0088CC),
+    this.mainColor = const Color(0xff0088CC),
   }) {
     this.syntaxTheme = syntaxTheme ?? darculaTheme;
     this.dividerLineColor =

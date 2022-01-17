@@ -80,7 +80,7 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
           icon: const Icon(Icons.arrow_back),
         ),
         backgroundColor:
-            widget.headerBakgroundColor ?? widget.controller.theme.plutoColor,
+            widget.headerBakgroundColor ?? widget.controller.theme.mainColor,
         actions: [
           IconButton(
             onPressed: () {
