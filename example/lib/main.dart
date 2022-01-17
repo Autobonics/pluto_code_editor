@@ -40,50 +40,11 @@ class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        height: 75,
-        // color: Colors.red,
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: 40,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        controller.addCharacter('  ');
-                      },
-                      child: Container(
-                        width: 70,
-                        color: Colors.transparent,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 4),
-                          child: Container(
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            Positioned(
-              right: 0,
-              top: 0,
-              child: FloatingActionButton(
-                onPressed: () {
-                  print(controller.getCode);
-                  controller.setControllers('def main():\n  print("shahir")');
-                },
-              ),
-            )
-          ],
-        ),
+      floatingActionButton: PlutoEditorBottomBar(
+        controller: controller,
+        keys: const ['#', '(', ')', '[', ']'],
+        onCodeRun: () {},
+        onPause: () {},
       ),
     );
   }

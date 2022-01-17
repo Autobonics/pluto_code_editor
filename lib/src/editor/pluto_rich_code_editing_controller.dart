@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_code_editor/src/editor_theme.dart';
 import 'package:highlight/highlight_core.dart' show highlight, Node;
+import 'package:pluto_code_editor/src/editor/editor_theme.dart';
 
 class PlutoRichCodeEditingController extends TextEditingController {
   // SyntaxHighlighterBase syntaxHighlighter;

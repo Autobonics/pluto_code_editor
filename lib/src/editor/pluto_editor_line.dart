@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pluto_code_editor/src/pluto_editor_formatter.dart';
-import 'package:pluto_code_editor/src/pluto_editor_line_controller.dart';
+import 'package:pluto_code_editor/src/editor/pluto_editor_formatter.dart';
+import 'package:pluto_code_editor/src/editor/pluto_editor_line_controller.dart';
 
 class PlutoEditorLine extends StatefulWidget {
   final PlutoEditorLineController controller;
@@ -41,9 +41,9 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
 
   @override
   void dispose() {
-    _rawFocusNode.dispose();
-    widget.controller.dispose();
     super.dispose();
+    _rawFocusNode.dispose();
+    // widget.controller.dispose();
   }
 
   @override
@@ -72,7 +72,7 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
         ),
         Expanded(
           child: RawKeyboardListener(
-            focusNode: FocusNode(),
+            focusNode: _rawFocusNode,
             onKey: (RawKeyEvent key) {
               if (key.isKeyPressed(LogicalKeyboardKey.backspace)) {
                 widget.onRemoveLine(widget.lineNumber - 1);

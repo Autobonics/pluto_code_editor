@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_code_editor/src/editor_theme.dart';
-import 'package:pluto_code_editor/src/pluto_editor_formatter.dart';
-import 'package:pluto_code_editor/src/pluto_editor_line_controller.dart';
+import 'package:pluto_code_editor/src/editor/editor_theme.dart';
+import 'package:pluto_code_editor/src/editor/pluto_editor_formatter.dart';
+import 'package:pluto_code_editor/src/editor/pluto_editor_line_controller.dart';
 
 class PlutoCodeEditorController extends ValueNotifier {
   final List<PlutoEditorLineController> controllers;
@@ -77,9 +77,10 @@ def main(process):
     );
   }
 
-  void clear() {
+  void clear(BuildContext context) {
     controllers.clear();
     controllers.add(getNewLineController(0));
+    FocusScope.of(context).unfocus();
     notifyListeners();
   }
 }

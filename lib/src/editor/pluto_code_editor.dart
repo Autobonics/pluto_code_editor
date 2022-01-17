@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_code_editor/src/bonicpython.dart';
-import 'package:pluto_code_editor/src/editor_theme.dart';
-import 'package:pluto_code_editor/src/pluto_code_editor_controller.dart';
-import 'package:pluto_code_editor/src/pluto_editor_formatter.dart';
-import 'package:pluto_code_editor/src/pluto_editor_line.dart';
-import 'package:pluto_code_editor/src/pluto_editor_line_controller.dart';
+import 'package:pluto_code_editor/src/editor/bonicpython.dart';
+import 'package:pluto_code_editor/src/editor/editor_theme.dart';
+import 'package:pluto_code_editor/src/editor/pluto_code_editor_controller.dart';
+import 'package:pluto_code_editor/src/editor/pluto_editor_formatter.dart';
+import 'package:pluto_code_editor/src/editor/pluto_editor_line.dart';
+import 'package:pluto_code_editor/src/editor/pluto_editor_line_controller.dart';
 import 'package:highlight/highlight_core.dart' show highlight;
 
 class PlutoCodeEditor extends StatefulWidget {
@@ -32,15 +32,6 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
   _listner() {
     setState(() {});
   }
-
-  // PlutoEditorLineController _getNewLineController(int setfoucsTo) {
-  //   return PlutoEditorLineController(
-  //     text: "  " * widget.controller.indentationController.currentIndent,
-  //     editorTheme: widget.controller.theme,
-  //     language: widget.controller.language,
-  //     listner: () => widget.controller.currentFocus = setfoucsTo,
-  //   );
-  // }
 
   @override
   void initState() {
