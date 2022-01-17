@@ -76,7 +76,10 @@ class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
               right: 0,
               top: 0,
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  print(controller.getCode);
+                  controller.setControllers('def main():\n  print("shahir")');
+                },
               ),
             )
           ],

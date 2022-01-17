@@ -29,16 +29,19 @@ class PlutoEditorLine extends StatefulWidget {
 
 class _PlutoEditorLineState extends State<PlutoEditorLine> {
   late PlutoEditorFormatter _formatter;
+  late FocusNode _rawFocusNode;
 
   @override
   void initState() {
     _formatter =
         PlutoEditorFormatter(widget.onNewline, widget.indentationController);
+    _rawFocusNode = FocusNode();
     super.initState();
   }
 
   @override
   void dispose() {
+    _rawFocusNode.dispose();
     widget.controller.dispose();
     super.dispose();
   }
@@ -87,7 +90,7 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
               controller: widget.controller.textEditingController,
             ),
           ),
-        )
+        ),
       ],
     );
   }

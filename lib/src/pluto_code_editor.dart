@@ -11,45 +11,44 @@ class PlutoCodeEditor extends StatefulWidget {
   // final SyntaxHighlighterBase? syntaxHighlighter;
   // final Color dividerLineColor;
   final PlutoCodeEditorController controller;
-  final EditorTheme theme;
-  final String language;
+  // final EditorTheme theme;
+  // final String language;
 
   PlutoCodeEditor({
     Key? key,
     // this.syntaxHighlighter,
     required this.controller,
-    EditorTheme? theme,
-    this.language = 'bonicpython',
-  })  : this.theme = theme ?? EditorTheme(),
-        super(key: key);
+    // EditorTheme? theme,
+    // this.language = 'bonicpython',
+  })
+  // : this.theme = theme ?? EditorTheme(),
+  : super(key: key);
 
   @override
   _PlutoCodeEditorState createState() => _PlutoCodeEditorState();
 }
 
 class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
-  // late SyntaxHighlighterBase _syntaxHighlighter;
-  final LineIndentationController _indentationController =
-      LineIndentationController();
-
   _listner() {
     setState(() {});
   }
 
+  // PlutoEditorLineController _getNewLineController(int setfoucsTo) {
+  //   return PlutoEditorLineController(
+  //     text: "  " * widget.controller.indentationController.currentIndent,
+  //     editorTheme: widget.controller.theme,
+  //     language: widget.controller.language,
+  //     listner: () => widget.controller.currentFocus = setfoucsTo,
+  //   );
+  // }
+
   @override
   void initState() {
-    if (widget.language == 'bonicpython') {
+    if (widget.controller.language == 'bonicpython') {
       highlight.registerLanguage('bonicpython', bonicpython);
     }
     widget.controller.addListener(_listner);
-
-    widget.controller.controllers.add(
-      PlutoEditorLineController(
-        editorTheme: widget.theme,
-        language: widget.language,
-        listner: () => widget.controller.currentFocus = 0,
-      ),
-    );
+    widget.controller.setInitCode();
     super.initState();
   }
 
@@ -63,24 +62,19 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        color: widget.theme.backgroundColor,
+        color: widget.controller.theme.backgroundColor,
         child: ListView.builder(
           itemCount: widget.controller.controllers.length,
           itemBuilder: (context, index) {
             return PlutoEditorLine(
               controller: widget.controller.controllers[index],
               lineNumber: index + 1,
-              indentationController: _indentationController,
-              dividerLineColor: widget.theme.dividerLineColor,
-              lineNumberStyle: widget.theme.lineNumberStyle,
+              indentationController: widget.controller.indentationController,
+              dividerLineColor: widget.controller.theme.dividerLineColor,
+              lineNumberStyle: widget.controller.theme.lineNumberStyle,
               onNewline: () async {
                 PlutoEditorLineController lineController =
-                    PlutoEditorLineController(
-                  text: "  " * _indentationController.currentIndent,
-                  editorTheme: widget.theme,
-                  language: widget.language,
-                  listner: () => widget.controller.currentFocus = index + 1,
-                );
+                    widget.controller.getNewLineController(index + 1);
                 widget.controller.controllers.insert(index + 1, lineController);
                 setState(() {});
                 await Future.delayed(const Duration(milliseconds: 50));
