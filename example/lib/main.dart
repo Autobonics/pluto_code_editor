@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pluto_code_editor/pluto_code_editor.dart';
 
@@ -13,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pluto Code Editor Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -30,19 +33,31 @@ class PlutoCodeEditorDemo extends StatefulWidget {
 
 class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
   PlutoCodeEditorController controller = PlutoCodeEditorController();
+  StreamController streamController = StreamController.broadcast();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: PlutoCodeEditor(
-          controller: controller,
-        ),
+      endDrawer: PlutoOutputViewer(
+        controller: controller,
+        output: streamController.stream,
+      ),
+      body: PlutoCodeEditor(
+        controller: controller,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: PlutoEditorBottomBar(
         controller: controller,
-        keys: const ['#', '(', ')', '[', ']'],
+        keys: const [
+          ':',
+          '#',
+          '(',
+          ')',
+          '[',
+          ']',
+          '.',
+          "'",
+        ],
         onCodeRun: () {},
         onPause: () {},
       ),

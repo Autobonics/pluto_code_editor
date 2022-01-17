@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_code_editor/pluto_code_editor.dart';
+import 'package:pluto_code_editor/src/bottom_bar/pluto_bottom_bar_key_card.dart';
 import 'package:pluto_code_editor/src/editor/editor_theme.dart';
 
 class PlutoEditorBottomBar extends StatefulWidget {
@@ -21,8 +22,6 @@ class PlutoEditorBottomBar extends StatefulWidget {
 }
 
 class _PlutoEditorBottomBarState extends State<PlutoEditorBottomBar> {
-  bool isPlaying = false;
-
   _getTabCard() {
     return KeyCard(
       char: 'Tab',
@@ -53,6 +52,7 @@ class _PlutoEditorBottomBarState extends State<PlutoEditorBottomBar> {
               height: 40,
               color: widget.controller.theme.syntaxTheme['comment']?.color,
               child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.keys.length + 2,
                 itemBuilder: (context, index) {
@@ -82,54 +82,24 @@ class _PlutoEditorBottomBarState extends State<PlutoEditorBottomBar> {
             right: 8,
             top: 0,
             child: FloatingActionButton(
-              child: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+              backgroundColor: widget.controller.theme.plutoColor,
+              child: Icon(
+                  widget.controller.isPlaying ? Icons.pause : Icons.play_arrow),
               onPressed: () {
-                if (isPlaying) {
-                  isPlaying = false;
+                if (widget.controller.isPlaying) {
+                  widget.controller.isPlaying = false;
                   setState(() {});
                   widget.onPause();
                 } else {
-                  isPlaying = true;
+                  widget.controller.isPlaying = true;
                   setState(() {});
+                  Scaffold.of(context).openEndDrawer();
                   widget.onCodeRun();
                 }
               },
             ),
           )
         ],
-      ),
-    );
-  }
-}
-
-class KeyCard extends StatelessWidget {
-  final String char;
-  final VoidCallback onTap;
-
-  const KeyCard({
-    Key? key,
-    required this.char,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 70,
-        color: Colors.transparent,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          child: Center(
-              child: Text(
-            char,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          )),
-        ),
       ),
     );
   }

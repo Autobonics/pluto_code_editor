@@ -10,6 +10,7 @@ class PlutoCodeEditorController extends ValueNotifier {
   final String language;
   final String? code;
   final LineIndentationController indentationController;
+  bool isPlaying;
 
   PlutoCodeEditorController({
     EditorTheme? theme,
@@ -19,6 +20,7 @@ class PlutoCodeEditorController extends ValueNotifier {
         currentFocus = 0,
         this.theme = theme ?? EditorTheme(),
         indentationController = LineIndentationController(),
+        isPlaying = false,
         super(1);
 
   void addCharacter(String char) {
