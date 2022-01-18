@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_highlight/themes/darcula.dart';
+import 'package:flutter_highlight/themes/an-old-hope.dart';
 
 class EditorTheme {
   late Color backgroundColor;
@@ -24,7 +24,7 @@ class EditorTheme {
     TextStyle? lineNumberStyle,
     this.mainColor = const Color(0xff0088CC),
   }) {
-    this.syntaxTheme = syntaxTheme ?? darculaTheme;
+    this.syntaxTheme = syntaxTheme ?? anOldHopeTheme;
     this.dividerLineColor =
         dividerLineColor ?? this.syntaxTheme['symbol']?.color ?? Colors.grey;
     this.backgroundColor = backgroundColor ??

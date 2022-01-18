@@ -55,15 +55,29 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
   @override
   Widget build(BuildContext context) {
     _getOutputs() {
-      return SingleChildScrollView(
-        controller: _scrollController,
-        child: SizedBox(
-          width: double.maxFinite,
+      if (!widget.controller.isPlaying) {
+        return const Center(
           child: Text(
-            outPut,
-            style: const TextStyle(
-              color: Colors.white60,
-              fontSize: 12,
+            "Run the code to view output",
+            style: TextStyle(
+                color: Colors.white60,
+                fontSize: 14,
+                fontStyle: FontStyle.italic),
+          ),
+        );
+      }
+      return Padding(
+        padding: const EdgeInsets.only(left: 15.0, right: 15),
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: SizedBox(
+            width: double.maxFinite,
+            child: Text(
+              outPut,
+              style: const TextStyle(
+                color: Colors.white60,
+                fontSize: 14,
+              ),
             ),
           ),
         ),
@@ -102,7 +116,7 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _getHeader(),
-          const SizedBox(height: 10),
+          // const SizedBox(height: 10),
           Expanded(child: _getOutputs()),
         ],
       ),

@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:pluto_code_editor/pluto_code_editor.dart';
+import 'package:flutter_highlight/themes/an-old-hope.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,8 +31,10 @@ class PlutoCodeEditorDemo extends StatefulWidget {
 }
 
 class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
-  PlutoCodeEditorController controller = PlutoCodeEditorController();
+  PlutoCodeEditorController controller = PlutoCodeEditorController(
+      theme: EditorTheme(syntaxTheme: anOldHopeTheme));
   StreamController streamController = StreamController.broadcast();
+  bool isRunning = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +64,20 @@ class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
           '.',
           "'",
         ],
-        onCodeRun: () {},
-        onPause: () {},
+        onCodeRun: () {
+          isRunning = true;
+          void showHelloWorld() async {
+            if (!isRunning) return;
+            streamController.sink.add("Hello world\n");
+            await Future.delayed(const Duration(milliseconds: 200));
+            showHelloWorld();
+          }
+
+          showHelloWorld();
+        },
+        onPause: () {
+          isRunning = false;
+        },
       ),
     );
   }
