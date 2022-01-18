@@ -1,7 +1,6 @@
 # example
 
-A new Flutter project.
-
+This is a example to demonstrate the proper working and potential of pluto_code_editor package.
 ## Getting Started
 
 This project is a starting point for a Flutter application.
