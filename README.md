@@ -10,10 +10,12 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
-
+## Pluto Code Editor
 
 This is a complete code editor with line number, syntax highlighting and an output window.
 It is made for python programming, specifically for bonicPython which runs inside Pluto (a modular robotic kit).
+
+![](https://github.com/Autobonics/pluto_code_editor/blob/main/assets/pluto_code_editor_demo.gif)
 
 ## Features
 
