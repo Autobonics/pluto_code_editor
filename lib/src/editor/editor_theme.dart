@@ -11,7 +11,7 @@ class EditorTheme {
   late Color mainColor;
 
   static const _defaultFontColor = Color(0xff000000);
-  static const defaultBackgroundColor = Color(0xffffffff);
+  static const defaultBackgroundColor = Color(0xff000000);
   static const _defaultFontFamily = 'monospace';
   static const _defaultLineNumberStyle = TextStyle(color: Colors.grey);
 

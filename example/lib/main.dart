@@ -47,6 +47,9 @@ class _PlutoCodeEditorDemoState extends State<PlutoCodeEditorDemo> {
       endDrawer: PlutoOutputViewer(
         controller: controller,
         output: streamController.stream,
+        onInputSend: (input) {
+          print(input);
+        },
       ),
       body: PlutoCodeEditor(
         controller: controller,

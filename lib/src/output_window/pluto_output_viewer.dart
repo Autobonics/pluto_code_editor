@@ -6,11 +6,13 @@ class PlutoOutputViewer extends StatefulWidget {
   final Stream? output;
   final PlutoCodeEditorController controller;
   final Color? headerBakgroundColor;
+  final void Function(String)? onInputSend;
   const PlutoOutputViewer({
     Key? key,
     required this.output,
     required this.controller,
     this.headerBakgroundColor,
+    this.onInputSend,
   }) : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
   bool _needsScroll = false;
   late ScrollController _scrollController;
   String outPut = '';
+  String? currentInput;
 
   @override
   void initState() {
@@ -108,6 +111,52 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
       );
     }
 
+    _getInput() {
+      return Row(
+        children: [
+          const SizedBox(width: 10),
+          const Text(
+            '>>>',
+            style: TextStyle(color: Colors.white38),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+              ),
+              onChanged: (val) {
+                currentInput = val;
+              },
+            ),
+          ),
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                widget.controller.theme.mainColor,
+              ),
+            ),
+            onPressed: () {
+              if (currentInput != null) {
+                widget.onInputSend!(currentInput ?? '');
+              }
+            },
+            child: const Text('send'),
+          ),
+          const SizedBox(width: 10),
+        ],
+      );
+    }
+
+    _getDivider() {
+      return const Divider(
+        color: Colors.white24,
+      );
+    }
+
     WidgetsBinding.instance!.addPostFrameCallback((_) => _scrollToEnd());
 
     return Container(
@@ -117,6 +166,8 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
         children: [
           _getHeader(),
           // const SizedBox(height: 10),
+          if (widget.onInputSend != null) _getInput(),
+          if (widget.onInputSend != null) _getDivider(),
           Expanded(child: _getOutputs()),
         ],
       ),
