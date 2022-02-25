@@ -70,18 +70,23 @@ def main(process):
     setControllers(code ?? _code);
   }
 
-  PlutoEditorLineController getNewLineController(int setfoucsTo) {
-    return PlutoEditorLineController(
-      text: "  " * indentationController.currentIndent,
+  PlutoEditorLineController getNewLineController(int setfoucsTo, String text) {
+    int offset = indentationController.currentOffset;
+    PlutoEditorLineController lineController = PlutoEditorLineController(
+      text: " " * offset + text,
       editorTheme: theme,
       language: language,
       listner: () => currentFocus = setfoucsTo,
     );
+    lineController.textEditingController.selection =
+        TextSelection.fromPosition(TextPosition(offset: offset));
+
+    return lineController;
   }
 
   void clear(BuildContext context) {
     controllers.clear();
-    controllers.add(getNewLineController(0));
+    controllers.add(getNewLineController(0, ''));
     FocusScope.of(context).unfocus();
     notifyListeners();
   }

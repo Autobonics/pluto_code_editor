@@ -1,40 +1,30 @@
 import 'package:flutter/services.dart';
 
 class PlutoEditorFormatter extends TextInputFormatter {
-  final void Function() onNewLine;
+  final void Function(String text) onNewLine;
   final LineIndentationController _indentationController;
-  int _currentPos;
 
-  PlutoEditorFormatter(this.onNewLine, this._indentationController)
-      : _currentPos = 0;
+  PlutoEditorFormatter(this.onNewLine, this._indentationController);
 
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     PressedKey pressedKey = KeyboardUtilz.getPressedKey(oldValue, newValue);
     if (pressedKey == PressedKey.enter) {
-      newValue = oldValue;
+      int offset = oldValue.selection.baseOffset;
+      String prefixText = oldValue.text.substring(0, offset);
+      String suffixText = oldValue.text.substring(offset);
+      newValue = TextEditingValue(text: prefixText);
       String lastChar = '';
-      String trimmedVal = newValue.text.trim();
+      String trimmedVal = newValue.text.trimLeft();
       if (trimmedVal.length > 1) {
         lastChar =
             trimmedVal.substring(trimmedVal.length - 1, trimmedVal.length);
       }
-      if (lastChar == ":") {
-        _indentationController.currentIndent += 1;
-      }
-      onNewLine();
-    } else if (pressedKey == PressedKey.regular) {
-      _currentPos += 1;
-    } else if (pressedKey == PressedKey.backSpace) {
-      _currentPos -= 1;
+      _indentationController.currentOffset =
+          newValue.text.length - trimmedVal.length + (lastChar == ":" ? 2 : 0);
 
-      if (_currentPos < 0) {
-        _indentationController.currentIndent += (_currentPos ~/ 2);
-        if (_indentationController.currentIndent < 0) {
-          _indentationController.currentIndent = 0;
-        }
-      }
+      onNewLine(suffixText);
     }
 
     return newValue;
@@ -68,7 +58,7 @@ class KeyboardUtilz {
 enum PressedKey { enter, backSpace, regular }
 
 class LineIndentationController {
-  int currentIndent;
+  int currentOffset;
 
-  LineIndentationController() : currentIndent = 0;
+  LineIndentationController() : currentOffset = 0;
 }

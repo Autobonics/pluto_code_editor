@@ -5,8 +5,8 @@ import 'package:pluto_code_editor/src/editor/pluto_editor_line_controller.dart';
 
 class PlutoEditorLine extends StatefulWidget {
   final PlutoEditorLineController controller;
-  final void Function() onNewline;
-  final void Function(int) onRemoveLine;
+  final void Function(String text) onNewline;
+  final void Function(int, String suffixText) onRemoveLine;
   final int lineNumber;
   final LineIndentationController indentationController;
   final Color dividerLineColor;
@@ -43,7 +43,6 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
   void dispose() {
     super.dispose();
     _rawFocusNode.dispose();
-    // widget.controller.dispose();
   }
 
   @override
@@ -54,7 +53,6 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
         SizedBox(
           width: 20,
           height: 20,
-          // color: Colors.grey,
           child: Center(
               child: Text(
             widget.lineNumber.toString(),
@@ -73,9 +71,19 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
         Expanded(
           child: RawKeyboardListener(
             focusNode: _rawFocusNode,
-            onKey: (RawKeyEvent key) {
+            onKey: (RawKeyEvent key) async {
               if (key.isKeyPressed(LogicalKeyboardKey.backspace)) {
-                widget.onRemoveLine(widget.lineNumber - 1);
+                var cursorPos = widget
+                    .controller.textEditingController.selection.base.offset;
+                String prefixText = widget.controller.textEditingController.text
+                    .substring(0, cursorPos);
+                if (prefixText.isEmpty) {
+                  String suffixText = widget
+                      .controller.textEditingController.text
+                      .substring(cursorPos);
+                  await Future.delayed(const Duration(microseconds: 10));
+                  widget.onRemoveLine(widget.lineNumber - 1, suffixText);
+                }
               }
             },
             child: TextField(

@@ -6,21 +6,12 @@ import 'package:pluto_code_editor/src/editor/pluto_editor_line_controller.dart';
 import 'package:highlight/highlight_core.dart' show highlight;
 
 class PlutoCodeEditor extends StatefulWidget {
-  // final SyntaxHighlighterBase? syntaxHighlighter;
-  // final Color dividerLineColor;
   final PlutoCodeEditorController controller;
-  // final EditorTheme theme;
-  // final String language;
 
-  PlutoCodeEditor({
+  const PlutoCodeEditor({
     Key? key,
-    // this.syntaxHighlighter,
     required this.controller,
-    // EditorTheme? theme,
-    // this.language = 'bonicpython',
-  })
-  // : this.theme = theme ?? EditorTheme(),
-  : super(key: key);
+  }) : super(key: key);
 
   @override
   _PlutoCodeEditorState createState() => _PlutoCodeEditorState();
@@ -61,20 +52,25 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
               indentationController: widget.controller.indentationController,
               dividerLineColor: widget.controller.theme.dividerLineColor,
               lineNumberStyle: widget.controller.theme.lineNumberStyle,
-              onNewline: () async {
+              onNewline: (String text) async {
                 PlutoEditorLineController lineController =
-                    widget.controller.getNewLineController(index + 1);
+                    widget.controller.getNewLineController(index + 1, text);
                 widget.controller.controllers.insert(index + 1, lineController);
                 setState(() {});
                 await Future.delayed(const Duration(milliseconds: 50));
                 FocusScope.of(context).requestFocus(lineController.focusNode);
               },
-              onRemoveLine: (int index) async {
+              onRemoveLine: (int index, String suffixText) async {
                 if (index == 0) return;
                 widget.controller.controllers.removeAt(index);
                 setState(() {});
                 PlutoEditorLineController controller =
                     widget.controller.controllers[index - 1];
+                int offset = controller.textEditingController.text.length;
+                controller.textEditingController.text += suffixText;
+                controller.textEditingController.selection =
+                    TextSelection.fromPosition(TextPosition(offset: offset));
+                setState(() {});
                 FocusScope.of(context).requestFocus(controller.focusNode);
               },
             );
