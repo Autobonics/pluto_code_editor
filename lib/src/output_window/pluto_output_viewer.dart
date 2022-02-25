@@ -63,9 +63,10 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
           child: Text(
             "Run the code to view output",
             style: TextStyle(
-                color: Colors.white60,
-                fontSize: 14,
-                fontStyle: FontStyle.italic),
+              color: Colors.white60,
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+            ),
           ),
         );
       }
@@ -130,22 +131,24 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
               ),
               onChanged: (val) {
                 currentInput = val;
+                setState(() {});
               },
             ),
           ),
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                widget.controller.theme.mainColor,
+          if (currentInput != null && currentInput!.isNotEmpty)
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  widget.controller.theme.mainColor,
+                ),
               ),
+              onPressed: () {
+                if (currentInput != null) {
+                  widget.onInputSend!(currentInput ?? '');
+                }
+              },
+              child: const Text('send'),
             ),
-            onPressed: () {
-              if (currentInput != null) {
-                widget.onInputSend!(currentInput ?? '');
-              }
-            },
-            child: const Text('send'),
-          ),
           const SizedBox(width: 10),
         ],
       );
