@@ -14,7 +14,13 @@ class PlutoEditorFormatter extends TextInputFormatter {
       int offset = oldValue.selection.baseOffset;
       String prefixText = oldValue.text.substring(0, offset);
       String suffixText = oldValue.text.substring(offset);
-      newValue = TextEditingValue(text: prefixText);
+      newValue = TextEditingValue(
+        text: prefixText,
+        selection: TextSelection.fromPosition(
+          TextPosition(offset: prefixText.length),
+        ),
+      );
+
       String lastChar = '';
       String trimmedVal = newValue.text.trimLeft();
       if (trimmedVal.length > 1) {
