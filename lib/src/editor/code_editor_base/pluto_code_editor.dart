@@ -38,6 +38,31 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
     super.dispose();
   }
 
+  _getOnNewLine(int index) {
+    return (String text) async {
+      PlutoEditorLineController lineController =
+          widget.controller.getNewLineController(index + 1, text);
+      widget.controller.controllers.insert(index + 1, lineController);
+      setState(() {});
+      await Future.delayed(const Duration(milliseconds: 50));
+      FocusScope.of(context).requestFocus(lineController.focusNode);
+    };
+  }
+
+  _onRemoveLine(int index, String suffixText) async {
+    if (index == 0) return;
+    widget.controller.controllers.removeAt(index);
+    setState(() {});
+    PlutoEditorLineController controller =
+        widget.controller.controllers[index - 1];
+    int offset = controller.textEditingController.text.length;
+    controller.textEditingController.text += suffixText;
+    controller.textEditingController.selection =
+        TextSelection.fromPosition(TextPosition(offset: offset));
+    setState(() {});
+    FocusScope.of(context).requestFocus(controller.focusNode);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -52,27 +77,8 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
               indentationController: widget.controller.indentationController,
               dividerLineColor: widget.controller.theme.dividerLineColor,
               lineNumberStyle: widget.controller.theme.lineNumberStyle,
-              onNewline: (String text) async {
-                PlutoEditorLineController lineController =
-                    widget.controller.getNewLineController(index + 1, text);
-                widget.controller.controllers.insert(index + 1, lineController);
-                setState(() {});
-                await Future.delayed(const Duration(milliseconds: 50));
-                FocusScope.of(context).requestFocus(lineController.focusNode);
-              },
-              onRemoveLine: (int index, String suffixText) async {
-                if (index == 0) return;
-                widget.controller.controllers.removeAt(index);
-                setState(() {});
-                PlutoEditorLineController controller =
-                    widget.controller.controllers[index - 1];
-                int offset = controller.textEditingController.text.length;
-                controller.textEditingController.text += suffixText;
-                controller.textEditingController.selection =
-                    TextSelection.fromPosition(TextPosition(offset: offset));
-                setState(() {});
-                FocusScope.of(context).requestFocus(controller.focusNode);
-              },
+              onNewline: _getOnNewLine(index),
+              onRemoveLine: _onRemoveLine,
             );
           },
         ),

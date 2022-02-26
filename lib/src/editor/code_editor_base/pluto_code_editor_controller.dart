@@ -18,6 +18,7 @@ class PlutoCodeEditorController extends ValueNotifier {
     this.code,
   })  : controllers = <PlutoEditorLineController>[],
         currentFocus = 0,
+        // dragLineStart = 0,
         this.theme = theme ?? EditorTheme(),
         indentationController = LineIndentationController(),
         isPlaying = false,
@@ -35,6 +36,21 @@ class PlutoCodeEditorController extends ValueNotifier {
       code += '\n';
     }
     return code;
+  }
+
+  String get getCodeInCurrentLine {
+    return controllers[currentFocus].textEditingController.text;
+  }
+
+  String get getCurrentSelectedCode {
+    int baseOffset =
+        controllers[currentFocus].textEditingController.selection.baseOffset;
+    int extendOffset =
+        controllers[currentFocus].textEditingController.selection.extentOffset;
+    return controllers[currentFocus]
+        .textEditingController
+        .text
+        .substring(baseOffset, extendOffset);
   }
 
   void setControllers(String code) {

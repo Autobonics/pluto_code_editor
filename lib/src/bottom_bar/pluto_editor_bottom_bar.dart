@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_code_editor/pluto_code_editor.dart';
 import 'package:pluto_code_editor/src/bottom_bar/pluto_bottom_bar_key_card.dart';
-import 'package:pluto_code_editor/src/editor/editor_theme.dart';
 
 class PlutoEditorBottomBar extends StatefulWidget {
   final PlutoCodeEditorController controller;

@@ -45,20 +45,34 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
     _rawFocusNode.dispose();
   }
 
+  _getLineNumber() {
+    return GestureDetector(
+      onTap: () {
+        widget.controller.focusNode.requestFocus();
+        widget.controller.textEditingController.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: widget.controller.textEditingController.text.length);
+      },
+      child: Container(
+        color: Colors.transparent,
+        width: 40,
+        height: 20,
+        child: Center(
+          child: Text(
+            widget.lineNumber.toString(),
+            style: widget.lineNumberStyle,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 20,
-          height: 20,
-          child: Center(
-              child: Text(
-            widget.lineNumber.toString(),
-            style: widget.lineNumberStyle,
-          )),
-        ),
+        _getLineNumber(),
         Container(
           height: 20,
           width: 1,
