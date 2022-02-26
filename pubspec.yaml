@@ -1,6 +1,7 @@
 name: pluto_code_editor
 description: A new Flutter package project.
-version: 0.0.1
+version: 0.1.0
+email: shahirc72@gmail.com
 homepage: https://github.com/Autobonics/pluto_code_editor
 
 environment:
