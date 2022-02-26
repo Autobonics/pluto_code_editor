@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_code_editor/src/editor/editor_theme.dart';
-import 'package:pluto_code_editor/src/editor/pluto_rich_code_editing_controller.dart';
+import 'package:pluto_code_editor/src/editor/editor_line_formatter/pluto_rich_code_editing_controller.dart';
 
 class PlutoEditorLineController {
   final PlutoRichCodeEditingController _controller;

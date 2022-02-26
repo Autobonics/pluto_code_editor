@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_code_editor/src/editor/bonicpython.dart';
-import 'package:pluto_code_editor/src/editor/pluto_code_editor_controller.dart';
-import 'package:pluto_code_editor/src/editor/pluto_editor_line.dart';
-import 'package:pluto_code_editor/src/editor/pluto_editor_line_controller.dart';
+import 'package:pluto_code_editor/src/editor/syntax/bonicpython.dart';
+import 'package:pluto_code_editor/src/editor/code_editor_base/pluto_code_editor_controller.dart';
+import 'package:pluto_code_editor/src/editor/code_editor_line/pluto_editor_line.dart';
+import 'package:pluto_code_editor/src/editor/code_editor_line/pluto_editor_line_controller.dart';
 import 'package:highlight/highlight_core.dart' show highlight;
 
 class PlutoCodeEditor extends StatefulWidget {
