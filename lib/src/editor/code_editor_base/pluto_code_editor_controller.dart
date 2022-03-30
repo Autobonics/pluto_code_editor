@@ -38,6 +38,11 @@ class PlutoCodeEditorController extends ValueNotifier {
     return code;
   }
 
+  set setCode(code) {
+    controllers.clear();
+    setControllers(code);
+  }
+
   String get getCodeInCurrentLine {
     return controllers[currentFocus].textEditingController.text;
   }
