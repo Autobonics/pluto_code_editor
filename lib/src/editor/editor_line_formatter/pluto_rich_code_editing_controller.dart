@@ -62,12 +62,12 @@ List<TextSpan> _convert(
       stack.add(currentSpans);
       currentSpans = tmp;
 
-      node.children!.forEach((n) {
+      for (var n in node.children!) {
         _traverse(n);
         if (n == node.children!.last) {
           currentSpans = stack.isEmpty ? spans : stack.removeLast();
         }
-      });
+      }
     }
   }
 
