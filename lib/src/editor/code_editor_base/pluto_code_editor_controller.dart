@@ -87,6 +87,10 @@ def main(process):
     else :
       led.set_color_hex('#cc0000')
 
+
+
+
+
 ''';
     setControllers(code ?? _code);
   }
@@ -107,8 +111,9 @@ def main(process):
 
   void clear(BuildContext context) {
     controllers.clear();
-    controllers.add(getNewLineController(0, ''));
-    FocusScope.of(context).unfocus();
+    for (int i = 0; i < 5; i++) {
+      controllers.add(getNewLineController(i, ''));
+    }
     notifyListeners();
   }
 }

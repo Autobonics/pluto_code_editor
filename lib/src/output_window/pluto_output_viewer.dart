@@ -160,7 +160,7 @@ class _PlutoOutputViewerState extends State<PlutoOutputViewer> {
       );
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _scrollToEnd());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
 
     return Container(
       color: widget.controller.theme.backgroundColor,

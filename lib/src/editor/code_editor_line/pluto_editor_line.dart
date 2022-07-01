@@ -89,9 +89,11 @@ class _PlutoEditorLineState extends State<PlutoEditorLine> {
               if (key.isKeyPressed(LogicalKeyboardKey.backspace)) {
                 var cursorPos = widget
                     .controller.textEditingController.selection.base.offset;
-                String prefixText = widget.controller.textEditingController.text
-                    .substring(0, cursorPos);
-                if (prefixText.isEmpty) {
+                // String prefixText = widget
+                //     .controller.textEditingController.text
+                //     .substring(0, cursorPos);
+                if (cursorPos <= 0) {
+                  cursorPos = 0;
                   String suffixText = widget
                       .controller.textEditingController.text
                       .substring(cursorPos);

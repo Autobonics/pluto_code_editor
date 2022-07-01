@@ -51,6 +51,7 @@ class _PlutoCodeEditorState extends State<PlutoCodeEditor> {
 
   _onRemoveLine(int index, String suffixText) async {
     if (index == 0) return;
+    widget.controller.controllers[index].dispose();
     widget.controller.controllers.removeAt(index);
     setState(() {});
     PlutoEditorLineController controller =

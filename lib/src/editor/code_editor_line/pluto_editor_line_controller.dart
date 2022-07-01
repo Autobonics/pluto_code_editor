@@ -27,7 +27,6 @@ class PlutoEditorLineController {
 
   void dispose() {
     _focusNode.removeListener(listner);
-    _focusNode.dispose();
     _controller.dispose();
   }
 }
