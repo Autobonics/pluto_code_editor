@@ -4,16 +4,24 @@ import 'package:pluto_code_editor/src/bottom_bar/pluto_bottom_bar_key_card.dart'
 
 class PlutoEditorBottomBar extends StatefulWidget {
   final PlutoCodeEditorController controller;
-  final Function() onCodeRun;
-  final Function() onPause;
+
+  ///called when code is run
+  final void Function()? onCodeRun;
+
+  ///called when code is paused
+  final void Function()? onPause;
   final List<String> keys;
+
+  ///custom action button
+  final Widget? actionButton;
 
   const PlutoEditorBottomBar({
     Key? key,
     required this.controller,
     required this.keys,
-    required this.onCodeRun,
-    required this.onPause,
+    this.onCodeRun,
+    this.onPause,
+    this.actionButton,
   }) : super(key: key);
 
   @override
@@ -80,23 +88,27 @@ class _PlutoEditorBottomBarState extends State<PlutoEditorBottomBar> {
           Positioned(
             right: 8,
             top: 0,
-            child: FloatingActionButton(
-              backgroundColor: widget.controller.theme.mainColor,
-              child: Icon(
-                  widget.controller.isPlaying ? Icons.pause : Icons.play_arrow),
-              onPressed: () {
-                if (widget.controller.isPlaying) {
-                  widget.controller.isPlaying = false;
-                  setState(() {});
-                  widget.onPause();
-                } else {
-                  widget.controller.isPlaying = true;
-                  setState(() {});
-                  Scaffold.of(context).openEndDrawer();
-                  widget.onCodeRun();
-                }
-              },
-            ),
+            child: widget.actionButton ??
+                FloatingActionButton(
+                  backgroundColor: widget.controller.theme.mainColor,
+                  child: Icon(
+                    widget.controller.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                  ),
+                  onPressed: () {
+                    if (widget.controller.isPlaying) {
+                      widget.controller.isPlaying = false;
+                      setState(() {});
+                      widget.onPause?.call();
+                    } else {
+                      widget.controller.isPlaying = true;
+                      setState(() {});
+                      Scaffold.of(context).openEndDrawer();
+                      widget.onCodeRun?.call();
+                    }
+                  },
+                ),
           )
         ],
       ),
